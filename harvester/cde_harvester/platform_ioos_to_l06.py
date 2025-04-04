@@ -48,7 +48,8 @@ def get_l06_codes_and_labels():
         res = l06Lookup[broaderL06]
         platforms_parsed[l06_url_code]["category"] = res
     df = pd.DataFrame.from_dict(platforms_parsed, orient="index")
-    del df["broader_L06_url"]
+    if "broader_L06_url" in df.columns:
+        del df["broader_L06_url"]
     df.index = df.index.str.split("/").str[-2]
     df.index.names = ["l06_code"]
     return df
