@@ -14,6 +14,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+RUN pip install -q numpy==1.26.4 pandas==2.1.1
 RUN pip install -q ./downloader ./download_scheduler ./harvester
 
 # -u seems to be needed to get it to print to stdout
