@@ -1,0 +1,66 @@
+# railway.toml
+
+# Configuration du service web-api
+[web-api]
+rootDirectory = "web-api"
+dockerfilePath = "web-api/Dockerfile"
+startCommand = "node ./bin/www"
+
+# Configuration du service frontend
+[frontend]
+rootDirectory = "frontend"
+dockerfilePath = "frontend/Dockerfile"
+startCommand = "nginx -g 'daemon off;'"
+
+# Configuration du service scheduler
+[scheduler]
+rootDirectory = "download_scheduler"
+dockerfilePath = "download_scheduler/Dockerfile"
+startCommand = """
+sh -c \"ln -sf /usr/src/app/volume /usr/src/app/downloads && \
+python -u -m download_scheduler\"
+"""
+
+# Configuration du service harvester
+[harvester]
+rootDirectory = "."
+dockerfilePath = "harvester/Dockerfile"
+startCommand = """
+sh -c \"ln -sf /usr/src/app/volume/harvest_config.yaml /usr/src/app/harvest_config.yaml && \
+ln -sf /usr/src/app/volume/harvester_cache /usr/src/app/harvester_cache && \
+ln -sf /usr/src/app/volume/harvest /usr/src/app/harvest && \
+sh ./harvester/run.sh\"
+"""
+
+# Configuration du service nginx
+[nginx]
+rootDirectory = "nginx"
+dockerfilePath = "nginx/Dockerfile"
+startCommand = "nginx -g 'daemon off;'"
+
+# Configuration du service redis
+[redis]
+image = "redis:alpine"
+command = "redis-server /usr/local/etc/redis/redis.conf"
+volumes = [
+  "redis-data:/var/lib/redis",
+  "./redis-config/redis.conf:/usr/local/etc/redis/redis.conf"
+]
+expose = ["6379"]
+
+# Configuration du service db
+[db]
+image = "postgis/postgis:13-3.1-alpine"
+platform = "linux/x86_64"
+ports = ["${DB_PORT:-5432}:${DB_PORT:-5432}"]
+environment = [
+  "PGPORT=${DB_PORT:-5432}",
+  "POSTGRES_DB=$DB_NAME",
+  "POSTGRES_PASSWORD=$DB_PASSWORD",
+  "POSTGRES_USER=$DB_USER"
+]
+volumes = [
+  "postgres-data:/var/lib/postgresql/data",
+  "./database:/docker-entrypoint-initdb.d"
+]
+healthcheck = { test = ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"], interval = "10s", timeout = "5s", retries = 5 }
