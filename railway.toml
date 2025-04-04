@@ -3,6 +3,7 @@
 # Configuration du service web-api
 [web-api]
 rootDirectory = "web-api"
+builder = "DOCKERFILE"
 dockerfilePath = "web-api/Dockerfile"
 startCommand = "node ./bin/www"
 env = {
@@ -18,6 +19,7 @@ env = {
 # Configuration du service frontend
 [frontend]
 rootDirectory = "frontend"
+builder = "DOCKERFILE"
 dockerfilePath = "frontend/Dockerfile"
 startCommand = "nginx -g 'daemon off;'"
 env = {
@@ -27,6 +29,7 @@ env = {
 # Configuration du service scheduler
 [scheduler]
 rootDirectory = "download_scheduler"
+builder = "DOCKERFILE"
 dockerfilePath = "download_scheduler/Dockerfile"
 startCommand = """
 sh -c 'ln -sf /usr/src/app/volume/downloads /usr/src/app/downloads && \
@@ -45,6 +48,7 @@ env = {
 # Configuration du service harvester
 [harvester]
 rootDirectory = "."
+builder = "DOCKERFILE"
 dockerfilePath = "harvester/Dockerfile"
 startCommand = """
 sh -c 'ln -sf /usr/src/app/volume/harvest_config.yaml /usr/src/app/harvest_config.yaml && \
@@ -62,6 +66,7 @@ env = {
 # Configuration du service nginx
 [nginx]
 rootDirectory = "nginx"
+builder = "DOCKERFILE"
 dockerfilePath = "nginx/Dockerfile"
 startCommand = "nginx -g 'daemon off;'"
 env = {
