@@ -1,0 +1,17 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./harvester/Dockerfile"
+
+[deploy]
+startCommand = """
+sh -c 'ln -sf /usr/src/app/volume/harvest_config.yaml /usr/src/app/harvest_config.yaml && \
+ln -sf /usr/src/app/volume/harvester_cache /usr/src/app/harvester_cache && \
+ln -sf /usr/src/app/volume/harvest /usr/src/app/harvest && \
+sh ./harvester/run.sh'
+"""
+
+[env]
+DB_NAME = "cde"
+DB_USER = "postgres"
+DB_HOST_EXTERNAL = "db"
+ENVIRONMENT = "development"

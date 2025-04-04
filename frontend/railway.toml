@@ -1,0 +1,9 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./frontend/Dockerfile"
+
+[deploy]
+startCommand = "nginx -g 'daemon off;'"
+
+[env]
+API_URL = "http://web-api:4000/api"

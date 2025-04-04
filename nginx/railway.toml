@@ -1,0 +1,9 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./nginx/Dockerfile"
+
+[deploy]
+startCommand = "nginx -g 'daemon off;'"
+
+[env]
+NGINX_PORT = "4000"

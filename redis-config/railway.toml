@@ -1,0 +1,11 @@
+# redis/railway.toml
+
+[build]
+image = "redis:alpine"
+
+[deploy]
+startCommand = "redis-server /usr/local/etc/redis/redis.conf"
+
+[env]
+REDIS_PORT = "6379"
+REDIS_PASSWORD = "your_redis_password"

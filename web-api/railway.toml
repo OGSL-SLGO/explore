@@ -1,0 +1,15 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./web-api/Dockerfile"
+
+[deploy]
+startCommand = "node ./bin/www"
+
+[env]
+DB_NAME = "cde"
+DB_USER = "postgres"
+DB_HOST = "db"
+API_URL = "http://web-api:4000/api"
+BASE_URL = "http://frontend"
+REDIS_HOST = "redis"
+ENVIRONMENT = "development"
