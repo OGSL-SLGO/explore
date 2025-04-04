@@ -5,38 +5,68 @@
 rootDirectory = "web-api"
 dockerfilePath = "web-api/Dockerfile"
 startCommand = "node ./bin/www"
+env = {
+  DB_NAME = "cde",
+  DB_USER = "postgres",
+  DB_HOST = "db",
+  API_URL = "http://web-api:4000/api",
+  BASE_URL = "http://frontend",
+  REDIS_HOST = "redis",
+  ENVIRONMENT = "development"
+}
 
 # Configuration du service frontend
 [frontend]
 rootDirectory = "frontend"
 dockerfilePath = "frontend/Dockerfile"
 startCommand = "nginx -g 'daemon off;'"
+env = {
+  API_URL = "http://web-api:4000/api"
+}
 
 # Configuration du service scheduler
 [scheduler]
 rootDirectory = "download_scheduler"
 dockerfilePath = "download_scheduler/Dockerfile"
 startCommand = """
-sh -c \"ln -sf /usr/src/app/volume /usr/src/app/downloads && \
-python -u -m download_scheduler\"
+sh -c 'ln -sf /usr/src/app/volume/downloads /usr/src/app/downloads && \
+python -u -m download_scheduler'
 """
+env = {
+  DB_NAME = "cde",
+  DB_USER = "postgres",
+  DB_HOST = "db",
+  DOWNLOAD_WAF_URL = "https://pac-dev2.cioos.org/images/ceda/",
+  CREATE_PDF = "False",
+  DOWNLOADS_FOLDER = "./downloads",
+  ENVIRONMENT = "development"
+}
 
 # Configuration du service harvester
 [harvester]
 rootDirectory = "."
 dockerfilePath = "harvester/Dockerfile"
 startCommand = """
-sh -c \"ln -sf /usr/src/app/volume/harvest_config.yaml /usr/src/app/harvest_config.yaml && \
+sh -c 'ln -sf /usr/src/app/volume/harvest_config.yaml /usr/src/app/harvest_config.yaml && \
 ln -sf /usr/src/app/volume/harvester_cache /usr/src/app/harvester_cache && \
 ln -sf /usr/src/app/volume/harvest /usr/src/app/harvest && \
-sh ./harvester/run.sh\"
+sh ./harvester/run.sh'
 """
+env = {
+  DB_NAME = "cde",
+  DB_USER = "postgres",
+  DB_HOST_EXTERNAL = "db",
+  ENVIRONMENT = "development"
+}
 
 # Configuration du service nginx
 [nginx]
 rootDirectory = "nginx"
 dockerfilePath = "nginx/Dockerfile"
 startCommand = "nginx -g 'daemon off;'"
+env = {
+  NGINX_PORT = "8098"
+}
 
 # Configuration du service redis
 [redis]
@@ -52,15 +82,14 @@ expose = ["6379"]
 [db]
 image = "postgis/postgis:13-3.1-alpine"
 platform = "linux/x86_64"
-ports = ["${DB_PORT:-5432}:${DB_PORT:-5432}"]
+ports = ["5432:5432"]
 environment = [
-  "PGPORT=${DB_PORT:-5432}",
-  "POSTGRES_DB=$DB_NAME",
-  "POSTGRES_PASSWORD=$DB_PASSWORD",
-  "POSTGRES_USER=$DB_USER"
+  "PGPORT=5432",
+  "POSTGRES_DB=cde",
+  "POSTGRES_USER=postgres"
 ]
 volumes = [
   "postgres-data:/var/lib/postgresql/data",
   "./database:/docker-entrypoint-initdb.d"
 ]
-healthcheck = { test = ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"], interval = "10s", timeout = "5s", retries = 5 }
+healthcheck = { test = ["CMD", "pg_isready", "-q", "-d", "cde", "-U", "postgres"], interval = "10s", timeout = "5s", retries = 5 }
