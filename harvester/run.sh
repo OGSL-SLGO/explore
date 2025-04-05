@@ -2,13 +2,12 @@
 
 echo "Checking for harvest_config.yaml..."
 
-# If no harvest_config.yaml exists, fall back to the sample version
-if [ ! -f harvest_config.yaml ]; then
-  echo "No harvest_config.yaml found, using default sample config..."
+# Supprimer un lien mort si besoin
+if [ -L harvest_config.yaml ] || [ ! -f harvest_config.yaml ]; then
+  echo "No harvest_config.yaml found. Falling back to sample config..."
   cp harvest_config.sample.yaml harvest_config.yaml
-else
-  echo "harvest_config.yaml found, using it."
 fi
 
-# Now launch the harvester
-python -m cde_harvester
+echo "harvest_config.yaml ready. Running harvester..."
+
+python -m cde_harvester --file harvest_config.yaml
