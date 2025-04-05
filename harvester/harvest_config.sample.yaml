@@ -1,5 +1,5 @@
 # list of erddap URLs. Should end in /erddap
-erddap_urls:
+urls:
   - https://data.cioospacific.ca/erddap
 
 # set to true to test with caching. Not available in production docker compose file
