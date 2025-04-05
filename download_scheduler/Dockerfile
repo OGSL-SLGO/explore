@@ -21,7 +21,7 @@ RUN pip install -q ./downloader ./download_scheduler ./harvester
 
 COPY ../database /usr/src/app/database
 
-COPY ./init_db.sh /usr/src/app/init_db.sh
+COPY ./download_scheduler/init_db.sh /usr/src/app/init_db.sh
 RUN chmod +x /usr/src/app/init_db.sh
 
 # -u seems to be needed to get it to print to stdout
