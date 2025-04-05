@@ -39,7 +39,10 @@ if envs["ENVIRONMENT"] == "production":
     )
 
 
-database_link = f"postgresql://{envs['DB_USER']}:{envs['DB_PASSWORD']}@{envs['DB_HOST']}:{envs.get('DB_PORT', 5432)}/{envs['DB_NAME']}"
+database_link = (
+    f"postgresql://{envs.get('DB_USER')}:{envs.get('DB_PASSWORD')}"
+    f"@{envs.get('DB_HOST')}:{envs.get('DB_PORT', 5432)}/{envs.get('DB_NAME')}"
+)
 print("Connecting to", envs["DB_HOST"])
 engine = create_engine(database_link)
 
