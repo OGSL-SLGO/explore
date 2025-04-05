@@ -18,6 +18,7 @@ harvester_cache
 ckan_harvester_cache
 build
 *.csv
+!platforms_nerc_ioos.csv
 !harvester/**/*.csv
 harvest
 harvester_cache*
