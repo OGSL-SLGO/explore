@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y postgresql-client
 WORKDIR /usr/src/app
 
 COPY . .
-COPY ../platforms_nerc_ioos.csv /usr/src/app/platforms_nerc_ioos.csv
+COPY ./download_scheduler/platforms_nerc_ioos.csv /usr/src/app/platforms_nerc_ioos.csv
 
 RUN pip install -q numpy==1.26.4 pandas==2.1.1
 RUN pip install -q ./downloader ./download_scheduler ./harvester
