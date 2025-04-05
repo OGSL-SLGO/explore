@@ -26,24 +26,27 @@ def get_l06_codes_and_labels():
 
     for platform in platforms:
         # first entry describes the vocabulary, skip it
-        if not "identifier" in platform:
+        if "identifier" not in platform:
             continue
 
-        label = platform.get("prefLabel", {}).get("@value")
+        label = platform.get("skos:prefLabel", {}).get("@value")
         if not label:
             logger.warning("Skipping platform with missing label: %s", platform)
             continue
-        broader = platform.get("broader", [])
+
+        broader = platform.get("skos:broader", [])
         id = platform["@id"]
         found_parent_platform = False
+
         for url in broader:
-            if "L06" in url:
-                platforms_parsed[id] = {"broader_L06_url": url, "l06_label": label}
+            if "L06" in url["@id"]:
+                platforms_parsed[id] = {"broader_L06_url": url["@id"], "l06_label": label}
                 found_parent_platform = True
                 continue
+
         if not found_parent_platform:
-            # this must be a platform category
             platforms_parsed[id] = {"broader_L06_url": id, "l06_label": label}
+
         l06Lookup[id] = label
 
     for l06_url_code, item in platforms_parsed.items():
