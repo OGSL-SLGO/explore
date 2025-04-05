@@ -43,7 +43,7 @@ database_link = (
     f"postgresql://{envs.get('DB_USER')}:{envs.get('DB_PASSWORD')}"
     f"@{envs.get('DB_HOST')}:{envs.get('DB_PORT', 5432)}/{envs.get('DB_NAME')}"
 )
-print("Connecting to", envs["DB_HOST"])
+print("Connecting to", envs.get("DB_HOST", "<missing DB_HOST>"))
 engine = create_engine(database_link)
 
 create_pdf = False
