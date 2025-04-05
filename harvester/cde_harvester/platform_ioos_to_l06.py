@@ -29,7 +29,10 @@ def get_l06_codes_and_labels():
         if not "identifier" in platform:
             continue
 
-        label = platform["prefLabel"]["@value"]
+        label = platform.get("prefLabel", {}).get("@value")
+        if not label:
+            logger.warning("Skipping platform with missing label: %s", platform)
+            continue
         broader = platform.get("broader", [])
         id = platform["@id"]
         found_parent_platform = False
@@ -52,6 +55,7 @@ def get_l06_codes_and_labels():
         del df["broader_L06_url"]
     df.index = df.index.str.split("/").str[-2]
     df.index.names = ["l06_code"]
+    logger.info("Parsed platform DataFrame with columns: %s", df.columns.tolist())
     return df
 
 
