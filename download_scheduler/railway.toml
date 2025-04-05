@@ -4,13 +4,14 @@ dockerfilePath = "./download_scheduler/Dockerfile"
 
 [deploy]
 startCommand = """
-sh -c 'ln -sf /usr/src/app/volume/downloads /usr/src/app/downloads && \
+sh -c '/usr/src/app/init_db.sh && \
+ln -sf /usr/src/app/volume/downloads /usr/src/app/downloads && \
 python -u -m download_scheduler'
 """
 
 [env]
 DB_NAME = "cde"
-DB_USER = "postgres"
+DB_USER = "OGSL"
 DB_HOST = "db"
 DOWNLOAD_WAF_URL = "https://pac-dev2.cioos.org/images/ceda/"
 CREATE_PDF = "False"
